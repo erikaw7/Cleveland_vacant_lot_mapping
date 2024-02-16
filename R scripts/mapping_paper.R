@@ -22,7 +22,8 @@ resize.win <- function(Width=6, Height=6)
   dev.off(); # dev.new(width=6, height=6)
   windows(record=TRUE, width=Width, height=Height)
 }
-resize.win(7/10)
+resize.win(10/10)
+
 # Theme----
 theme_ew <- function (base_size=16, font=NA) { 
   theme(axis.title.x = element_text(face="bold", size=25, vjust=-1.0),
@@ -250,6 +251,7 @@ plot(canopy_lm)
 
 canopy_lm_log<- lm(log(Existing_Percent_Canopy + 1) ~ new_land_types, data = acres_by_land_type)
 plot(canopy_lm_log)
+summary(canopy_lm_log)
 Anova(canopy_lm_log, type = "III")
 
 # aov() works too and produces the same result as Anova() with lm().
@@ -263,3 +265,21 @@ summary(pairwise_landtype)
 letters_pairwise_landtype<- cld(object = pairwise_landtype, adjust = "sidak",
                                 Letters = letters, alpha = 0.05, 
                                 which = seq_along(pairwise_landtype))
+# Commercial is significantly lower than residential
+# Commercial is significantly lower than ag
+# Commercial is significantly lower than vacant
+# Residential is significantly higher than transportation
+# Health is significantly lower than vacant
+# Transportation is significantly lower than ag, recreation, and vacant
+
+# Percent impervious ~ land type
+impervious_lm<- lm(Existing_Percent_Imperv ~ new_land_types, data = acres_by_land_type)
+plot(impervious_lm)
+summary(impervious_lm)
+
+impervious_lm_log<- lm(log(Existing_Percent_Imperv + 1)
+                       ~ new_land_types, data = acres_by_land_type)
+plot(impervious_lm_log)
+summary(impervious_lm_log)
+# Data do not look more normal with log transformation. Maybe we need to 
+  # specify a different distribution?
