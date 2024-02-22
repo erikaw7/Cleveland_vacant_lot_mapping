@@ -6,6 +6,8 @@ output: html_document
 ---
 This is the workflow for connecting R to ArcGIS on the R side. For this to work, you need to download the 'R-arcgis bridge' and connect it in ArcGIS Pro (resources: https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started, https://github.com/R-ArcGIS). Once installed and connected, you must initialize in R and can stay in R for the whole stats workflow if desired.
 
+Note: 'arcgisbinding' is not supported on R 4.3 yet, it does work on all the 4.2 versions (can change in tools>global options in Rstudio) 
+
 [Helpful ESRI tutorial: https://www.esri.com/training/Engine/defaultui/player/modern.html?configuration=ReturnUrl%7C&preventRightClick=False&cc=en-US&cache=21.1.14.331&playerConfUrl=n&registration=InstanceId%7C0%21LearningObjectId%7C58b5e417b89b7e000d8bfe45-145551%21UserId%7CIDM802404946_ohiostate&package=LearningObjectId%7C58b5e417b89b7e000d8bfe45-145551%21VersionId%7C0&tracking=True&forceReview=False]
 
 
