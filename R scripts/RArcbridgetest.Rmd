@@ -1,0 +1,52 @@
+---
+title: "RArcbridge"
+author: "Ellen Danford"
+date: "2024-02-21"
+output: html_document
+---
+This is the workflow for connecting R to ArcGIS on the R side. For this to work, you need to download the 'R-arcgis bridge' and connect it in ArcGIS Pro (resources: https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started, https://github.com/R-ArcGIS). Once installed and connected, you must initialize in R and can stay in R for the whole stats workflow if desired.
+
+[Helpful ESRI tutorial: https://www.esri.com/training/Engine/defaultui/player/modern.html?configuration=ReturnUrl%7C&preventRightClick=False&cc=en-US&cache=21.1.14.331&playerConfUrl=n&registration=InstanceId%7C0%21LearningObjectId%7C58b5e417b89b7e000d8bfe45-145551%21UserId%7CIDM802404946_ohiostate&package=LearningObjectId%7C58b5e417b89b7e000d8bfe45-145551%21VersionId%7C0&tracking=True&forceReview=False]
+
+
+```{r}
+library(arcgisbinding) #brings the r-arcgis bridge 
+arc.check_product() # initializes our connection to arcGIS
+
+```
+
+# loading data
+
+```{r}
+data <-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/AllParcels17_canopy_acs/FeatureServer/0") #this is the file path for the online version, the 0 at the end is because its the first layer (ie: if there were more than two in a feature set you can choose which one to open)
+
+data #make sure it loaded
+class(data) # we want it to be arc.data, but it might not be
+sp_data <- arc.select(data) # this makes the data arc.data
+class(sp_data) # just checking
+
+envvars_allparcels <-arc.data2sp(sp_data) # preserves spatial nature of data 
+
+selvars_allparcels <- arc.select(data, fields=c("PARCELPIN", "par_city", "TAX_LUC_DE", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A", "Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P", "Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "GEOID", "AREA_SQMI", "AREA_ACRES", "Median_inc")) # asking r to only incorporate the fields we are interested in (ie: taking down the column count)
+
+```
+
+check data to make sure everything loaded
+```{r}
+head(selvars_allparcels) # looks good, all the columns specified are there and the first dialogue box confirms that this is polygon data
+
+```
+
+## test data analysis
+Making sure R can do this with a simple computation
+```{r}
+
+mean_medin <- mean(selvars_allparcels$Median_inc)
+
+mean_medin
+#success! We are good to go!
+```
+
+![ESRI Training (linked above) funtion list]("C:\Grad School\Labmate projects\Erika\Tree Planting Estimation\PDFs\RArcBridgeFunctions.png")
+
+
