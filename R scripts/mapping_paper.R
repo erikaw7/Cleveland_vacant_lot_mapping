@@ -56,11 +56,6 @@ acres_by_land_type<- read_excel("C:/Users/erika/OneDrive - The Ohio State Univer
                                 col_names = T)
 summary(acres_by_land_type)
 
-#####OLD VERSION REMOVE######################################################################
-require(sf)
-shape_income <- st_read(
-  dsn = "C:/Users/erika/OneDrive - The Ohio State University/PhD/Mapping paper/R data files/For_R.gdb", 
-  layer = "AllParcelsCanopy_BGIncome19")
 
 ####### Loading GIS Data via ArcGIS Online #########
 # all parcels
