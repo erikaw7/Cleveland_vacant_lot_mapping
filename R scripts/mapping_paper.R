@@ -15,6 +15,7 @@ library(sf)
 library(multcompView)
 library(multcomp)
 library(plotrix)
+library(arcgisbinding)
 
 resize.win <- function(Width=6, Height=6)
 {
@@ -47,9 +48,6 @@ theme_ew <- function (base_size=16, font=NA) {
 # Load in data----
 getwd()
 
-Vacant_lots<- read_excel(
-  "C:/Users/erika/OneDrive - The Ohio State University/PhD/Mapping paper/R data files/VacantLotParcelsCanopyCensusTractIncome.xls", 
-  col_names=T, na=".")
 
 total_acreage<- read_excel("C:/Users/erika/OneDrive - The Ohio State University/PhD/Mapping paper/R data files/AcreageTotals.xlsx", 
                            col_names = T, na = ".")
@@ -58,10 +56,28 @@ acres_by_land_type<- read_excel("C:/Users/erika/OneDrive - The Ohio State Univer
                                 col_names = T)
 summary(acres_by_land_type)
 
+#####OLD VERSION REMOVE######################################################################
 require(sf)
 shape_income <- st_read(
   dsn = "C:/Users/erika/OneDrive - The Ohio State University/PhD/Mapping paper/R data files/For_R.gdb", 
   layer = "AllParcelsCanopy_BGIncome19")
+
+####### Loading GIS Data via ArcGIS Online #########
+# all parcels
+arc.check_product() # initializing connection to arcGIS
+shape_income<-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/AllParcels17_canopy_acs/FeatureServer/0")
+# asking r to only incorporate the fields we are interested in (ie: taking down the column count)
+
+shape_income_sel <- arc.select(shape_income, fields=c("PARCELPIN", "par_city", "TAX_LUC_DE", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A","Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P","Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "GEOID", "AREA_SQMI", "AREA_ACRES", "Median_inc")) 
+head(shape_income_sel)
+
+# vacant lots
+Vacant_lots<- arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/VacantLotAllVars/FeatureServer/0")
+vl_sel <- arc.select(Vacant_lots, fields=c("PARCELPIN", "par_city", "TAX_LUC_DESCRIPTION", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A", 
+                                           "Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P", 
+                                           "Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "Median_inc", "Change_Area", 
+                                           "Change_PercentChange", "TreeCanopy_2017_Area"))
+head(vl_sel)
 
 # Variable corrections----
 acres_by_land_type$LandType<- as.factor(acres_by_land_type$LandType)
