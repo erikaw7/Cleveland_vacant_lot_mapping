@@ -17,6 +17,7 @@ library(multcomp)
 library(plotrix)
 library(arcgisbinding)
 
+
 resize.win <- function(Width=6, Height=6)
 {
   # works for windows
