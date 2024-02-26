@@ -24,7 +24,7 @@ resize.win <- function(Width=6, Height=6)
   dev.off(); # dev.new(width=6, height=6)
   windows(record=TRUE, width=Width, height=Height)
 }
-resize.win(10/10)
+resize.win(14/10)
 
 # Theme----
 theme_ew <- function (base_size=16, font=NA) { 
@@ -228,7 +228,7 @@ acres_by_land_type<- acres_by_land_type %>%
                                "miscellanious" = c("0",
                                  "LISTED WITH"),
                                "municipal" = "municipal"))
-# Sum the area for each new land type
+# Sum the area for each new land type----
 land_type_summary<- acres_by_land_type %>% group_by(new_land_types) %>%
   summarise(sum_total_ac = sum(Total_Acreage),
             sum_parcels = sum(N_parcels),
@@ -301,3 +301,21 @@ plot(impervious_lm_log)
 summary(impervious_lm_log)
 # Data do not look more normal with log transformation. Maybe we need to 
   # specify a different distribution?
+
+# Percent canopy ~ income
+# Assign low, medium, or high income classes based on percentile of med inc.
+grouped_income_df<- shape_income_sel %>%  
+  mutate(income_class = case_when(Median_inc > quantile(Median_inc, 0.66) ~ "high", 
+                                Median_inc < quantile(Median_inc, 0.33) ~ "low", 
+                                between(Median_inc, 
+                                        quantile(Median_inc, 0.33),
+                                        quantile(Median_inc, 0.66)) ~ "medium"))
+avg_inc_df<- grouped_income_df %>%
+  group_by(income_class) %>%
+  summarise(avg_inc = mean(Median_inc))
+
+income_lm<- lm(Can_P ~ income_class, data = grouped_income_df)
+summary(income_lm)
+plot(income_lm)
+Anova(income_lm, type = "III")
+
