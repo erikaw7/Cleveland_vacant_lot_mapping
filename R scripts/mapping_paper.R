@@ -59,7 +59,7 @@ summary(acres_by_land_type)
 
 
 ####### Loading GIS Data via ArcGIS Online #########
-# all parcels
+# all parcels (use for tree cover & land cover analysis)
 arc.check_product() # initializing connection to arcGIS
 shape_income<-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/AllParcels17_canopy_acs/FeatureServer/0")
 # asking r to only incorporate the fields we are interested in (ie: taking down the column count)
@@ -67,13 +67,19 @@ shape_income<-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgi
 shape_income_sel <- arc.select(shape_income, fields=c("PARCELPIN", "par_city", "TAX_LUC_DE", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A","Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P","Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "GEOID", "AREA_SQMI", "AREA_ACRES", "Median_inc")) 
 head(shape_income_sel)
 
-# vacant lots
+# vacant lots (use for tree cover & land cover for vacant lots only)
 Vacant_lots<- arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/VacantLotAllVars/FeatureServer/0")
 vl_sel <- arc.select(Vacant_lots, fields=c("PARCELPIN", "par_city", "TAX_LUC_DESCRIPTION", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A", 
                                            "Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P", 
                                            "Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "Median_inc", "Change_Area", 
                                            "Change_PercentChange", "TreeCanopy_2017_Area"))
 head(vl_sel)
+
+# CENSUS BG env vars (use for income analysis [aggregated at block group level])
+census_vars <-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/CuyahogaCounty_envvar_CENSUSBG19/FeatureServer/0")
+census_vars_sel<-arc.select(census_vars, fields=c("GEOID", "Median_inc", "MoE", "SUM_Can_A", "SUM_Grass_", "SUM_Soil_A", "SUM_Water_", 
+                                                  "SUM_Build_", "SUM_Road_A", "SUM_Paved_", "SUM_Perv_A", "SUM_Imperv", "PercImperv", "PercCanopy", "name", "SUM_Total_"))
+head(census_vars_sel)
 
 # Variable corrections----
 acres_by_land_type$LandType<- as.factor(acres_by_land_type$LandType)
