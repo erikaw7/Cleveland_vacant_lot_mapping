@@ -24,7 +24,7 @@ resize.win <- function(Width=6, Height=6)
   dev.off(); # dev.new(width=6, height=6)
   windows(record=TRUE, width=Width, height=Height)
 }
-resize.win(14/10)
+resize.win(14/14)
 
 # Theme----
 theme_ew <- function (base_size=16, font=NA) { 
@@ -310,12 +310,31 @@ grouped_income_df<- shape_income_sel %>%
                                 between(Median_inc, 
                                         quantile(Median_inc, 0.33),
                                         quantile(Median_inc, 0.66)) ~ "medium"))
+
+grouped_income_df$can_prop<- grouped_income_df$Can_P/100
+
 avg_inc_df<- grouped_income_df %>%
   group_by(income_class) %>%
   summarise(avg_inc = mean(Median_inc))
 
-income_lm<- lm(Can_P ~ income_class, data = grouped_income_df)
+med_inc_lm<- lm(can_prop ~ Median_inc, data = grouped_income_df)
+summary(med_inc_lm)
+plot(med_inc_lm)
+
+income_lm<- lm(can_prop ~ income_class, data = grouped_income_df)
 summary(income_lm)
 plot(income_lm)
+
+income_ac_lm<- lm(Can_A ~ income_class, data = grouped_income_df)
+plot(income_ac_lm)
+# I have a strongly s-shaped residual qq plot fpr all models. 
+  # Maybe I need a mixed effects model? Not sure what to put as the random
+  # intercept. Seems like the massive amount of data may be causing problems...
 Anova(income_lm, type = "III")
+ggplot(grouped_income_df, aes(x = income_class, y = can_prop)) +
+  geom_boxplot() +
+  theme_ew()
+# High income groups have the highest canopy by far, and low income has slightly
+  # higher canopy than medium income.
+         
 
