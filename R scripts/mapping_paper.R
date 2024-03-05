@@ -312,28 +312,40 @@ grouped_income_df<- shape_income_sel %>%
                                         quantile(Median_inc, 0.66)) ~ "medium"))
 
 grouped_income_df$can_prop<- grouped_income_df$Can_P/100
+grouped_income_df$imperv_prop<- grouped_income_df$Imperv_P/100
 
 avg_inc_df<- grouped_income_df %>%
   group_by(income_class) %>%
   summarise(avg_inc = mean(Median_inc))
 
-med_inc_lm<- lm(can_prop ~ Median_inc, data = grouped_income_df)
+avg_can_df<- grouped_income_df %>%
+  group_by(Median_inc) %>%
+  summarise(avg_can = mean(can_prop), avg_imperv = mean(imperv_prop))
+
+med_inc_lm<- lm(can_prop ~ Median_inc*imperv_prop, data = grouped_income_df)
 summary(med_inc_lm)
 plot(med_inc_lm)
+Anova(med_inc_lm, type = "III")
 
-income_lm<- lm(can_prop ~ income_class, data = grouped_income_df)
+income_lm<- lm(can_prop ~ income_class*imperv_prop, data = grouped_income_df)
 summary(income_lm)
 plot(income_lm)
-
-income_ac_lm<- lm(Can_A ~ income_class, data = grouped_income_df)
-plot(income_ac_lm)
-# I have a strongly s-shaped residual qq plot fpr all models. 
-  # Maybe I need a mixed effects model? Not sure what to put as the random
-  # intercept. Seems like the massive amount of data may be causing problems...
 Anova(income_lm, type = "III")
+# qq plot looks a bit better when imperviousness is included, but other
+  # residual plots still look odd.
 ggplot(grouped_income_df, aes(x = income_class, y = can_prop)) +
   geom_boxplot() +
   theme_ew()
+
+ggplot(avg_can_df, aes(x = Median_inc, y = avg_can, col = avg_imperv)) +
+  geom_point() +
+  theme_ew() +
+  ylim(0.0, 1.0) +
+  xlab("Median income (USD)") +
+  ylab ("Mean prop. tree canopy") +
+  labs(col = "Mean prop. imperviousness") +
+  scale_color_continuous(name = "Mean prop. imperviousness", 
+                         lim = c(0.0, 1.0))
 # High income groups have the highest canopy by far, and low income has slightly
   # higher canopy than medium income.
          
