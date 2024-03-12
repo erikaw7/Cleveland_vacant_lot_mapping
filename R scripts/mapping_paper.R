@@ -66,6 +66,8 @@ shape_income<-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgi
 
 shape_income_sel <- arc.select(shape_income, fields=c("PARCELPIN", "par_city", "TAX_LUC_DE", "Total_A", "Can_A", "Grass_A", "Soil_A", "Water_A","Build_A", "Road_A", "Paved_A", "Perv_A", "Imperv_A", "Can_P", "Grass_P", "Soil_P", "Water_P","Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "GEOID", "AREA_SQMI", "AREA_ACRES", "Median_inc")) 
 head(shape_income_sel)
+str(shape_income_sel)
+unique(shape_income_sel$TAX_LUC_DE)
 
 # vacant lots (use for tree cover & land cover for vacant lots only)
 Vacant_lots<- arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/VacantLotAllVars/FeatureServer/0")
@@ -74,6 +76,28 @@ vl_sel <- arc.select(Vacant_lots, fields=c("PARCELPIN", "par_city", "TAX_LUC_DES
                                            "Build_P", "Road_P", "Paved_P", "Perv_P", "Imperv_P", "GEOID20", "Median_inc", "Change_Area", 
                                            "Change_PercentChange", "TreeCanopy_2017_Area"))
 head(vl_sel)
+str(vl_sel)
+
+# How can we make sure that all of the vacant lot parcels are contained within
+  # the all parcels shapefile?
+sum(vl_sel$Total_A, na.rm = TRUE)
+shape_income_sel<- shape_income_sel %>%
+  mutate(new_land_types = fct_collapse(TAX_LUC_DE,
+                                       "vacant" = c("RES VACANT LAND",
+                                                    "Commercial Vacant",
+                                                    "VACANT AG LAND",
+                                                    "VACANT AG LAND-CAUV",
+                                                    "VAC INDUSTRIAL LAND",
+                                                    "COMMERCIAL VAC LAND")))
+shape_income_sub<- shape_income_sel %>%
+  group_by(new_land_types) %>%
+  summarise(sum_ac = sum(Total_A))
+
+# There are more vacant lot acres in the shapefile with all parcels than the 
+  # shapefile with only vacant lots. There are some vacant categories in the
+  # all parcels shapefile that have the same/very similar names, but when I
+  # remove the repeated classes (tried all combinations), the total vacant
+  # acres still does not equal the total vacant acres in the vacant shapefile.
 
 # CENSUS BG env vars (use for income analysis [aggregated at block group level])
 census_vars <-arc.open(path="https://services6.arcgis.com/tuxY7TQIaDhLWARO/arcgis/rest/services/CuyahogaCounty_envvar_CENSUSBG19/FeatureServer/0")
