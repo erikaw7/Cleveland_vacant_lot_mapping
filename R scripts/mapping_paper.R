@@ -252,6 +252,155 @@ acres_by_land_type<- acres_by_land_type %>%
                                "miscellanious" = c("0",
                                  "LISTED WITH"),
                                "municipal" = "municipal"))
+
+acres_by_land_type_shape<- shape_income_sel %>%
+  mutate(new_land_types = fct_collapse(TAX_LUC_DE,
+                                       "residential" = c("1-FAMILY PLATTED LOT", 
+                                                         "2-FAMILY PLATTED LOT",
+                                                         "3-FAMILY PLATTED LOT",
+                                                         "4- 6 UNIT APARTMENTS",
+                                                         "COMMERCIAL CONDOMINI",
+                                                         "CONVALESCENT HOME",
+                                                         "DORMITORY",
+                                                         "ELEVATOR APTS 20-39U",
+                                                         "ELEVATOR APTS 40+ U",
+                                                         "ELEVATOR APTS 7-19 U",
+                                                         "GARDEN APTS 20-39 U",
+                                                         "GARDEN APTS 40+ U",
+                                                         "MOBILE HOME PARK",
+                                                         "OTHER COMM HSNG NEC",
+                                                         "OTHER RES PLATTED",
+                                                         "RESIDENTIAL CONDO",
+                                                         "ROW HOUSING",
+                                                         "SUBSIDIZED HOUSING",
+                                                         "WALK-UP APTS 20-39 U",
+                                                         "WALK-UP APTS 40+ U",
+                                                         "WALK-UP APTS 7-19 U"),
+                                       "government" = c("LAND FILL", "MARINE SVC FACILITY", 
+                                                        "POST OFFICE",
+                                                        "VEHICLE RECYCLING YD"),
+                                       "commercial" = c("1-2 STORY OFFCE BLDG",
+                                                        "1-UNIT WHSE <75000SF",
+                                                        "1-UNIT WHSE >75000SF",
+                                                        "AIRCRAFT SALES & SVC",
+                                                        "AMUSEMENT PARK",
+                                                        "AUTO REPAIR GARAGE",
+                                                        "AUTO SALES & SERVICE",
+                                                        "BILLBOARD SITE(S)",
+                                                        "BLDG MATERIAL STGE",
+                                                        "BOWLING ALLEY",
+                                                        "BULK OIL STGE",
+                                                        "CAFETERIA",
+                                                        "COMM WHSE LOFT-TYPE",
+                                                        "COMMERCIAL COMN AREA",
+                                                        "COMMON AREA PLATTED",
+                                                        "COMMUNICATION FAC.",
+                                                        "COMMUNITY SHOP CNTR",
+                                                        "CONTRACT/ CONST SVCS",
+                                                        "DAY CARE CENTER",
+                                                        "DEPARTMENT STORE",
+                                                        "DETACHD STORE<7500SF",
+                                                        "DETACHED HEALTH SPA",
+                                                        "DISCNT/JR DEPT STORE",
+                                                        "DISTRIBUTION WHSE",
+                                                        "DRIVE-IN RESTAURANT",
+                                                        "DRYCLEAN PLANT/LNDRY",
+                                                        "ELEVATOR OFFCE >2 ST",
+                                                        "FOOD/DRINK PROC/STGE",
+                                                        "FRANCHISE AUTO SVC",
+                                                        "FRANCHISE FD COUNTER",
+                                                        "FRANCHISE FD SITDOWN",
+                                                        "FRANCHISE FOOD STORE",
+                                                        "FS DRIVETHRU CARWASH",
+                                                        "FULL SERVICE BANK",
+                                                        "FULL SVC GAS STATION",
+                                                        "FUNERAL HOME",
+                                                        "FURNITURE MART",
+                                                        "GAS STATION W/ KIOSK",
+                                                        "GNRL RETAIL+ 7500 SQ",
+                                                        "GOLF COURSE",
+                                                        "HEAVY MFG/ FOUNDRY",
+                                                        "HOME GARDEN CENTER",
+                                                        "HOME IMPRVMNT CENTER",
+                                                        "HOTELS",
+                                                        "ICE CREAM STAND",
+                                                        "INDUSTRIAL COMMON AR",
+                                                        "LIGHT MFG / ASSEMBLY",
+                                                        "LODGE HALL",
+                                                        "M & E YARD STGE",
+                                                        "MATERIAL YARD STGE",
+                                                        "MEDIUM MFG/ ASSEMBLY",
+                                                        "MINATURE GOLF/DR RNG",
+                                                        "MINES AND QUARRIES",
+                                                        "MINI-STORAGE WHSE",
+                                                        "MOTELS",
+                                                        "MULTI-TENANT WHSE",
+                                                        "NEIGHBORHOOD TAVERN",
+                                                        "NIGHTCLUB",
+                                                        "OFFICE CONDO",
+                                                        "OTHER COMMERCIAL NEC",
+                                                        "OTHER FOOD SVC NEC",
+                                                        "OTHER INDUSTRIAL NEC",
+                                                        "OTHER RETAIL NEC",
+                                                        "PARTY CENTER",
+                                                        "R & D FACILITY",
+                                                        "REGIONAL SHOP CENTER",
+                                                        "SALVAGE/ SCRAP YARD",
+                                                        "SAVINGS AND LOAN",
+                                                        "SELF-SVC CAR WASH",
+                                                        "SMALL SHOPS",
+                                                        "STORE W/ WALKUP OFFC",
+                                                        "STORE W/ WALKUP APTS",
+                                                        "STRIPCNTR 4+U>7500SF",
+                                                        "SUPERMARKET",
+                                                        "THEATRE",
+                                                        "TRUCK SALES & SVC",
+                                                        "USED CAR SALES",
+                                                        "UTILITY SERVICE FAC.",
+                                                        "WALKUP OFFICE >2 ST"),
+                                       "vacant" = c("COMMERCIAL VAC LAND",
+                                                    "RES VACANT LAND",
+                                                    "VAC INDUSTRIAL LAND",
+                                                    "VACANT AG LAND",
+                                                    "VACANT AG LAND-CAUV",
+                                                    "Commercial Vacant"),
+                                       "agriculture" = c("CASH GRAIN/GEN-CAUV",
+                                                         "FRUIT/NUT FARM-CAUV",
+                                                         "GRAIN ELEVATORS",
+                                                         "GREENHOUSE",
+                                                         "LIVESTOCK FARM-CAUV",
+                                                         "NURSERY",
+                                                         "OTHER AG NEC - CAUV",
+                                                         "TIMBER - CAUV",
+                                                         "TIMBER / FOREST LAND",
+                                                         "VEGETABLE FARM",
+                                                         "VEGGIE FARM - CAUV"),
+                                       "recreation" = c("COMM CAMPGROUNDS",
+                                                        "CULTRL/NATURE EXHIBT",
+                                                        "RAQTBALL/TENNIS CLUB",
+                                                        "SMALL BOAT MARINA",
+                                                        "SPORT/ PUBLC ASSMBLY",
+                                                        "Recreational"),
+                                       "health" = c("ANIMAL CLINIC/ HOSP",
+                                                    "MED CLINIC/ OFFICES",
+                                                    "MED CLNC/ OFFC CONDO",
+                                                    "HOSPITALS FOR PROFIT",
+                                                    "NURSING HOME"),
+                                       "transportation" = c("COMM TRUCK TERMINAL",
+                                                            "ASSOCIATD PARKNG LOT",
+                                                            "COMM PARKING GARAGE",
+                                                            "COMM PARKING LOT",
+                                                            "RR-NOT USED IN OPER.",
+                                                            "RR-USED IN OPERATION",
+                                                            "TRANSPORTATION FAC.",
+                                                            "Transp/Util"),
+                                       "miscellanious" = c("0",
+                                                           "LISTED WITH",
+                                                           "Easement",
+                                                           "easement",
+                                                           "Preserved"),
+                                       "municipalpark" = "Municipal/Local Park"),
+                                       "federalpark" = "Federal Park")
 # Sum the area for each new land type----
 land_type_summary<- acres_by_land_type %>% group_by(new_land_types) %>%
   summarise(sum_total_ac = sum(Total_Acreage),
@@ -289,10 +438,10 @@ ggplot(land_type_summary, aes(x = new_land_types, y = sum_percent_canopy))+
 # Stats-----
 # Percent canopy ~ land type
 canopy_lm<- lm(Existing_Percent_Canopy ~ new_land_types, data = acres_by_land_type)
-plot(canopy_lm)
+#plot(canopy_lm)
 
 canopy_lm_log<- lm(log(Existing_Percent_Canopy + 1) ~ new_land_types, data = acres_by_land_type)
-plot(canopy_lm_log)
+#plot(canopy_lm_log)
 summary(canopy_lm_log)
 Anova(canopy_lm_log, type = "III")
 
@@ -316,12 +465,12 @@ letters_pairwise_landtype<- cld(object = pairwise_landtype, adjust = "sidak",
 
 # Percent impervious ~ land type
 impervious_lm<- lm(Existing_Percent_Imperv ~ new_land_types, data = acres_by_land_type)
-plot(impervious_lm)
+#plot(impervious_lm)
 summary(impervious_lm)
 
 impervious_lm_log<- lm(log(Existing_Percent_Imperv + 1)
                        ~ new_land_types, data = acres_by_land_type)
-plot(impervious_lm_log)
+#plot(impervious_lm_log)
 summary(impervious_lm_log)
 # Data do not look more normal with log transformation. Maybe we need to 
   # specify a different distribution?
@@ -348,12 +497,12 @@ avg_can_df<- grouped_income_df %>%
 
 med_inc_lm<- lm(can_prop ~ Median_inc*imperv_prop, data = grouped_income_df)
 summary(med_inc_lm)
-plot(med_inc_lm)
+#plot(med_inc_lm)
 Anova(med_inc_lm, type = "III")
 
 income_lm<- lm(can_prop ~ income_class*imperv_prop, data = grouped_income_df)
 summary(income_lm)
-plot(income_lm)
+#plot(income_lm)
 Anova(income_lm, type = "III")
 # qq plot looks a bit better when imperviousness is included, but other
   # residual plots still look odd.
